@@ -14,8 +14,6 @@ namespace PNGCompress
     {
         public static void CompressImage(string source, string target)
         {
-            //    private static int alphaTransparency = 10;
-            //private static int alphaFader = 70;
             var quantizer = new WuQuantizer();
             using (var bitmap = new Bitmap(source))
             {
@@ -26,6 +24,23 @@ namespace PNGCompress
                 using(var quantized = quantizer.QuantizeImage(bitmap))
                 {
                     quantized.Save(target, ImageFormat.Png);
+                }
+            }
+        }
+
+        public static byte[] CompressImage(Image source)
+        {
+            var quantizer = new WuQuantizer();
+            using (var bitmap = new Bitmap(source))
+            {
+                using (var quantized = quantizer.QuantizeImage(bitmap))
+                {
+                    //quantized.Save(target, ImageFormat.Png);
+                    using (var ms = new System.IO.MemoryStream())
+                    {
+                        quantized.Save(ms, ImageFormat.Png);
+                        return ms.ToArray();
+                    }
                 }
             }
         }
